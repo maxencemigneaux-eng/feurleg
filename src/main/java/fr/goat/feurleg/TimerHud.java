@@ -17,7 +17,6 @@ public final class TimerHud {
     private static final int COLOR_TITLE = 0xFFFF5555;
     private static final int COLOR_NAME = 0xFFDDDDDD;
     private static final int COLOR_BLUE = 0xFF5599FF;
-    private static final int COLOR_WHITE = 0xFFFFFFFF;
     private static final int COLOR_YELLOW = 0xFFFFFF55;
     private static final int COLOR_PURPLE = 0xFFCC66FF;
     private static final int COLOR_RED = 0xFFFF5555;
@@ -127,14 +126,13 @@ public final class TimerHud {
         ctx.getMatrices().pop();
     }
 
-    /** Bleu ≥ 30 min, blanc entre 10 et 30, jaune < 10, violet < 5, rouge < 2 (réglable). */
+    /** Bleu ≥ 10 min, jaune entre 5 et 10, violet < 5, rouge < 2 (réglable). */
     private static int countdownColor(long millis, FeurlegConfig cfg) {
         long min = 60_000L;
-        if (millis < cfg.redUnderMinutes * min) return COLOR_RED;
-        if (millis < cfg.purpleUnderMinutes * min) return COLOR_PURPLE;
-        if (millis < cfg.yellowUnderMinutes * min) return COLOR_YELLOW;
-        if (millis >= cfg.blueFromMinutes * min) return COLOR_BLUE;
-        return COLOR_WHITE;
+        if (millis < cfg.colorRedUnderMinutes * min) return COLOR_RED;
+        if (millis < cfg.colorPurpleUnderMinutes * min) return COLOR_PURPLE;
+        if (millis >= cfg.colorBlueFromMinutes * min) return COLOR_BLUE;
+        return COLOR_YELLOW;
     }
 
     /** 41:03 ou 1:05:09 */
