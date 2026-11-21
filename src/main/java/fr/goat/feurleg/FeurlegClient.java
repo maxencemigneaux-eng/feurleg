@@ -78,7 +78,7 @@ public final class FeurlegClient implements ClientModInitializer {
             long left = t.remainingMillis();
             if (cfg.warnSeconds > 0 && !t.warned && left <= cfg.warnSeconds * 1000L && left > 0) {
                 t.warned = true;
-                alert(client, "§e" + t.name, "§fLégendaire dans " + TimerHud.format(left) + " !", 1.0f);
+                alert(client, "§e" + t.name, "§fLégendaire dans " + TimerHud.format(left) + " !", 1.2f);
             }
             if (!t.alerted && left <= 0) {
                 t.alerted = true;
@@ -97,7 +97,8 @@ public final class FeurlegClient implements ClientModInitializer {
             client.inGameHud.setTitle(Text.literal(title));
         }
         if (cfg.alertSound) {
-            client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_NOTE_BLOCK_PLING, pitch));
+            // Volume plein (l'ancienne version jouait à 25 %, presque inaudible).
+            client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), pitch, 1.0f));
         }
     }
 }
