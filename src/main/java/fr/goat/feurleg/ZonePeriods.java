@@ -44,7 +44,7 @@ public final class ZonePeriods {
     public record Prediction(Long tick, String word, boolean approx, boolean night) {}
 
     private static final Gson GSON = new GsonBuilder().create();
-    private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve("feurleg-periods.json");
+    private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve("feurleg-periods2.json");
     private static final Type FILE_TYPE = new TypeToken<LinkedHashMap<String, LinkedHashMap<String, State>>>() {}.getType();
 
     private static Map<String, State> states = new LinkedHashMap<>();
@@ -72,11 +72,11 @@ public final class ZonePeriods {
         Map<String, String> t = new LinkedHashMap<>();
         t.put("minuit", "17000-18999");
         t.put("midi", "5000-6999");
-        t.put("aube", "22300-23999");
+        t.put("aube", "23000-23999");
         t.put("crépuscule", "12000-13702");
         t.put("matin", "0-4999");
         t.put("après-midi", "7000-11999");
-        t.put("nuit", "13703-16999,19000-22299");
+        t.put("nuit", "13703-16999,19000-22999");
         t.put("soir", "12000-13702");
         t.put("jour", "0-12541,23460-23999");
         return t;

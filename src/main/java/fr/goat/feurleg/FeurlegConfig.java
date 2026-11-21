@@ -40,6 +40,9 @@ public final class FeurlegConfig {
 
     /** Moments de la journée affichés par /leg -> plages de ticks (tick 0 = 6:00). */
     public java.util.Map<String, String> periods = ZonePeriods.defaultTable();
+    /** Version de la table : si elle change, la table par défaut remplace l'ancienne. */
+    public int periodsVersion = 0;
+    private static final int PERIODS_VERSION = 2;
 
     /** Format des timers du serveur : "mm:ss" (minutes:secondes) ou "h:mm" (heures:minutes). */
     public String timerFormat = "mm:ss";
@@ -70,7 +73,10 @@ public final class FeurlegConfig {
             FeurlegClient.LOGGER.warn("config/feurleg.json illisible, réglages par défaut utilisés", e);
         }
         if (instance == null) instance = new FeurlegConfig();
-        if (instance.periods == null || instance.periods.isEmpty()) instance.periods = ZonePeriods.defaultTable();
+        if (instance.periods == null || instance.periods.isEmpty() || instance.periodsVersion < PERIODS_VERSION) {
+            instance.periods = ZonePeriods.defaultTable();
+            instance.periodsVersion = PERIODS_VERSION;
+        }
         ZonePeriods.loadTable(instance.periods);
         save();
     }
