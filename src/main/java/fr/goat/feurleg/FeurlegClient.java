@@ -78,19 +78,24 @@ public final class FeurlegClient implements ClientModInitializer {
             long left = t.remainingMillis();
             if (cfg.warnSeconds > 0 && !t.warned && left <= cfg.warnSeconds * 1000L && left > 0) {
                 t.warned = true;
-                alert(client, "§e" + t.name + " : légendaire dans " + TimerHud.format(left) + " !", 1.0f);
+                alert(client, "§e" + t.name, "§fLégendaire dans " + TimerHud.format(left) + " !", 1.0f);
             }
             if (!t.alerted && left <= 0) {
                 t.alerted = true;
                 t.warned = true;
-                alert(client, "§a" + t.name + " : tentative de spawn légendaire !", 1.5f);
+                alert(client, "§a" + t.name, "§fTentative de spawn légendaire !", 1.5f);
             }
         }
     }
 
-    private static void alert(MinecraftClient client, String message, float pitch) {
+    /** Gros message au milieu de l'écran (titre + sous-titre). */
+    private static void alert(MinecraftClient client, String title, String subtitle, float pitch) {
         FeurlegConfig cfg = FeurlegConfig.get();
-        if (cfg.alertMessage) client.player.sendMessage(Text.literal(message), true);
+        if (cfg.alertMessage) {
+            client.inGameHud.setTitleTicks(5, 50, 15);
+            client.inGameHud.setSubtitle(Text.literal(subtitle));
+            client.inGameHud.setTitle(Text.literal(title));
+        }
         if (cfg.alertSound) {
             client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_NOTE_BLOCK_PLING, pitch));
         }
