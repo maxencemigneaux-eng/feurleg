@@ -20,7 +20,6 @@ public final class TimerHud {
     private static final int COLOR_YELLOW = 0xFFFFFF55;
     private static final int COLOR_PURPLE = 0xFFCC66FF;
     private static final int COLOR_RED = 0xFFFF5555;
-    private static final int COLOR_SPAWN = 0xFF55FF55;
     private static final int COLOR_STALE = 0xFF888888;
     private static final int COLOR_MC_DAY = 0xFFFFE0A0;
     private static final int COLOR_MC_NIGHT = 0xFF9FC4E8;
@@ -47,7 +46,6 @@ public final class TimerHud {
         int nameW = 0, timeW = 0, mcW = 0;
         boolean showMc = cfg.showMinecraftTime && client.world != null;
         boolean showCd = cfg.showCountdown || !showMc;
-        boolean blink = (System.currentTimeMillis() / 500) % 2 == 0;
         for (int i = 0; i < n; i++) {
             TimerStore.Timer t = timers.get(i);
             long left = t.remainingMillis();
@@ -55,8 +53,8 @@ public final class TimerHud {
                 times[i] = "/leg ?";
                 colors[i] = COLOR_STALE;
             } else if (left <= 0) {
-                times[i] = "Spawn !";
-                colors[i] = blink ? COLOR_SPAWN : 0xFF22AA22;
+                times[i] = "0:00";
+                colors[i] = COLOR_RED;
             } else {
                 times[i] = format(left);
                 colors[i] = countdownColor(left, cfg);
