@@ -1,2 +1,2 @@
-Compilation réussie : Feurleg 1.0.10 (essai n°11) le 2026-11-21 17:06 UTC
-feurleg-1.0.10.jar
+Compilation réussie : Feurleg 1.0.11 (essai n°12) le 2026-11-21 17:09 UTC
+feurleg-1.0.11.jar
