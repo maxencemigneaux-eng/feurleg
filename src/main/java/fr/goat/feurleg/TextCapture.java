@@ -76,6 +76,7 @@ public final class TextCapture {
         Map<String, Long> found = findTimers(entries);
         if (found.size() >= 2) {
             TimerStore.get().sync(found);
+            detectCurrentZone(entries, found);
             if (!autoDumpedThisScreen) {
                 autoDumpedThisScreen = true;
                 writeDump(entries, screen, found, false);
@@ -115,6 +116,27 @@ public final class TextCapture {
             if (seconds != null) result.put(best.text(), seconds);
         }
         return result;
+    }
+
+    /**
+     * Le menu /leg affiche la zone où se trouve le joueur, ex. "Unys · nuit · pluie · 17".
+     * Si une ligne de ce genre commence par un nom de zone connu, le joueur est dans cette zone.
+     */
+    private static void detectCurrentZone(List<Entry> entries, Map<String, Long> found) {
+        boolean sawHeader = false;
+        for (Entry e : entries) {
+            String t = e.text().replace('•', '·').replace('∙', '·');
+            int dot = t.indexOf('·');
+            if (dot <= 0) continue;
+            String first = t.substring(0, dot).trim();
+            if (found.containsKey(first)) {
+                ZoneClock.onLegSeen(first);
+                return;
+            }
+            if (t.chars().filter(ch -> ch == '·').count() >= 2) sawHeader = true;
+        }
+        // Ligne "Spawn · jour · ..." par ex. : le joueur n'est dans aucune zone à légendaires.
+        if (sawHeader) ZoneClock.onLegSeen(null);
     }
 
     private static boolean looksLikeLabel(String s) {

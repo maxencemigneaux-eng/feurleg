@@ -60,9 +60,14 @@ public final class TimerHud {
                 colors[i] = left <= cfg.warnSeconds * 1000L ? COLOR_SOON : COLOR_TIME;
             }
             if (showMc) {
-                if (left > 0) {
-                    // 20 ticks par seconde ; le tick 0 d'une journée = 6:00 du matin.
-                    long tick = Math.floorMod(client.world.getTimeOfDay() + left / 50, 24000L);
+                Long predicted = left > 0 ? ZoneClock.predictTick(t.name, left) : null;
+                if (left > 0 && predicted == null) {
+                    // Heure de cette zone pas encore connue : va dans la zone et ouvre /leg.
+                    mcTimes[i] = "--:--";
+                    mcColors[i] = COLOR_STALE;
+                } else if (left > 0) {
+                    // Le tick 0 d'une journée Minecraft = 6:00 du matin.
+                    long tick = predicted;
                     long hours = (tick / 1000 + 6) % 24;
                     long minutes = (tick % 1000) * 60 / 1000;
                     mcTimes[i] = String.format("%02d:%02d", hours, minutes);

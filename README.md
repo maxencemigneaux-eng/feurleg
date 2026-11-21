@@ -8,6 +8,10 @@ Mod Fabric **côté client** (Minecraft 1.21.1) qui affiche en permanence les ti
 - Les timers sont enregistrés par serveur (heure réelle) : ils survivent à une déconnexion ou un redémarrage.
 - Alerte (son + message) à 1 min et à 0.
 
+## Heure Minecraft du spawn
+Chaque zone a sa propre heure. Le mod l'apprend quand tu es **dans la zone et que tu ouvres /leg** (une fois par zone suffit),
+puis la fait avancer tout seul. Tant qu'une zone n'est pas connue, elle affiche `--:--`. Bleu = nuit, jaune clair = jour.
+
 ## Touches (modifiables dans Options > Commandes)
 - **K** : afficher / cacher le HUD
 - **F8** (dans un menu) : enregistre tout le texte du menu dans `config/feurleg-dump.txt` (debug)
