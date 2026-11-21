@@ -33,6 +33,12 @@ public final class FeurlegConfig {
     /** Afficher le compte à rebours (ex. "25:50"). */
     public boolean showCountdown = true;
 
+    /** Couleurs du compte à rebours selon les minutes restantes. */
+    public int blueFromMinutes = 30;
+    public int yellowUnderMinutes = 10;
+    public int purpleUnderMinutes = 5;
+    public int redUnderMinutes = 2;
+
     /** Format des timers du serveur : "mm:ss" (minutes:secondes) ou "h:mm" (heures:minutes). */
     public String timerFormat = "mm:ss";
 

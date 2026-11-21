@@ -21,6 +21,7 @@ puis la fait avancer tout seul. Tant qu'une zone n'est pas connue, elle affiche 
 - `offsetX`, `offsetY`, `scale`, `backgroundAlpha`
 - `timerFormat` : `mm:ss` (défaut) ou `h:mm` si les timers du serveur sont en heures:minutes
 - `showMinecraftTime` : heure Minecraft du spawn (bleu = nuit), `showCountdown` : compte à rebours
+- `blueFromMinutes` (30), `yellowUnderMinutes` (10), `purpleUnderMinutes` (5), `redUnderMinutes` (2) : couleurs du compte à rebours
 - `warnSeconds`, `alertSound`, `alertMessage`
 
 ## Compilation
