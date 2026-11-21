@@ -73,11 +73,11 @@ public final class ZonePeriods {
         t.put("minuit", "17000-18999");
         t.put("midi", "5000-6999");
         t.put("aube", "23000-23999");
-        t.put("crépuscule", "12000-13702");
+        t.put("crépuscule", "12000-12999");
         t.put("matin", "0-4999");
         t.put("après-midi", "7000-11999");
-        t.put("nuit", "13703-16999,19000-22999");
-        t.put("soir", "12000-13702");
+        t.put("nuit", "13000-16999,19000-22999");
+        t.put("soir", "12000-12999");
         t.put("jour", "0-12541,23460-23999");
         return t;
     }
@@ -176,7 +176,7 @@ public final class ZonePeriods {
 
     /** Ordre préféré pour nommer une heure (ex. "soir" plutôt que "crépuscule"). */
     private static final String[] DISPLAY_ORDER = {
-        "minuit", "midi", "aube", "soir", "matin", "apres-midi", "nuit", "crepuscule", "jour"};
+        "minuit", "midi", "aube", "crepuscule", "matin", "apres-midi", "nuit", "soir", "jour"};
 
     /** Nom du moment de la journée pour un tick (0-23999), ex. "matin". */
     public static String nameOfTick(long tick) {

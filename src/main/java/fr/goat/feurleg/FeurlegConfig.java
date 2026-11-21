@@ -42,7 +42,7 @@ public final class FeurlegConfig {
     public java.util.Map<String, String> periods = ZonePeriods.defaultTable();
     /** Version de la table : si elle change, la table par défaut remplace l'ancienne. */
     public int periodsVersion = 0;
-    private static final int PERIODS_VERSION = 2;
+    private static final int PERIODS_VERSION = 3;
 
     /** Format des timers du serveur : "mm:ss" (minutes:secondes) ou "h:mm" (heures:minutes). */
     public String timerFormat = "mm:ss";
