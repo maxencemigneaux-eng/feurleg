@@ -119,24 +119,47 @@ public final class TextCapture {
     }
 
     /**
-     * Le menu /leg affiche la zone où se trouve le joueur, ex. "Unys · nuit · pluie · 17".
-     * Si une ligne de ce genre commence par un nom de zone connu, le joueur est dans cette zone.
+     * Le menu /leg affiche :
+     *  - la zone où se trouve le joueur : "Johto · matin · temps clair · 27"
+     *  - au survol d'une zone, une info-bulle "Hoenn" puis "4 joueurs · nuit · temps clair".
+     * On en tire le moment de la journée de chaque zone, et la zone actuelle du joueur.
      */
     private static void detectCurrentZone(List<Entry> entries, Map<String, Long> found) {
         boolean sawHeader = false;
+        boolean headerDone = false;
         for (Entry e : entries) {
             String t = e.text().replace('•', '·').replace('∙', '·');
             int dot = t.indexOf('·');
-            if (dot <= 0) continue;
+            if (dot < 0) continue;
+            String word = ZonePeriods.findWord(t);
             String first = t.substring(0, dot).trim();
-            if (found.containsKey(first)) {
-                ZoneClock.onLegSeen(first);
-                return;
+
+            if (dot > 0 && found.containsKey(first)) {
+                // Ligne de la zone actuelle.
+                if (word != null) ZonePeriods.observe(first, word);
+                if (!headerDone) {
+                    ZoneClock.onLegSeen(first, word);
+                    headerDone = true;
+                }
+                continue;
             }
-            if (t.chars().filter(ch -> ch == '·').count() >= 2) sawHeader = true;
+            if (t.chars().filter(ch -> ch == '·').count() >= 2 && dot > 0) sawHeader = true;
+
+            if (word != null) {
+                // Info-bulle : le nom de la zone est écrit juste au-dessus, aligné à gauche.
+                Entry title = null;
+                for (Entry z : entries) {
+                    if (!found.containsKey(z.text())) continue;
+                    float dy = e.y() - z.y();
+                    if (Math.abs(z.x() - e.x()) <= 3 && dy > 0 && dy <= 100) {
+                        if (title == null || z.y() > title.y()) title = z;
+                    }
+                }
+                if (title != null) ZonePeriods.observe(title.text(), word);
+            }
         }
-        // Ligne "Spawn · jour · ..." par ex. : le joueur n'est dans aucune zone à légendaires.
-        if (sawHeader) ZoneClock.onLegSeen(null);
+        // Ligne "Spawn · ..." par ex. : le joueur n'est dans aucune zone à légendaires.
+        if (!headerDone && sawHeader) ZoneClock.onLegSeen(null, null);
     }
 
     private static boolean looksLikeLabel(String s) {

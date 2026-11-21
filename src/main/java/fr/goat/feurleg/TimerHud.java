@@ -60,21 +60,23 @@ public final class TimerHud {
                 colors[i] = countdownColor(left, cfg);
             }
             if (showMc) {
-                Long predicted = left > 0 ? ZoneClock.predictTick(t.name, left) : null;
-                if (left > 0 && predicted == null) {
-                    // Heure de cette zone pas encore connue : va dans la zone et ouvre /leg.
+                Long exact = left > 0 ? ZoneClock.predictTick(t.name, left) : null;
+                ZonePeriods.Prediction guess = (left > 0 && exact == null) ? ZonePeriods.predict(t.name, left) : null;
+                if (left <= 0) {
+                    mcTimes[i] = "";
+                } else if (exact != null) {
+                    mcTimes[i] = clock(exact);
+                    mcColors[i] = isNight(exact) ? COLOR_MC_NIGHT : COLOR_MC_DAY;
+                } else if (guess != null && guess.tick() != null) {
+                    mcTimes[i] = "~" + clock(guess.tick());
+                    mcColors[i] = guess.night() ? COLOR_MC_NIGHT : COLOR_MC_DAY;
+                } else if (guess != null) {
+                    mcTimes[i] = guess.word();
+                    mcColors[i] = guess.night() ? COLOR_MC_NIGHT : COLOR_MC_DAY;
+                } else {
+                    // Moment de cette zone pas encore connu : survole-la dans /leg.
                     mcTimes[i] = "--:--";
                     mcColors[i] = COLOR_STALE;
-                } else if (left > 0) {
-                    // Le tick 0 d'une journée Minecraft = 6:00 du matin.
-                    long tick = predicted;
-                    long hours = (tick / 1000 + 6) % 24;
-                    long minutes = (tick % 1000) * 60 / 1000;
-                    mcTimes[i] = String.format("%02d:%02d", hours, minutes);
-                    // Nuit Minecraft : environ de 19:00 (13000) à 5:00 (23000).
-                    mcColors[i] = (tick >= 13000 && tick < 23000) ? COLOR_MC_NIGHT : COLOR_MC_DAY;
-                } else {
-                    mcTimes[i] = "";
                 }
                 mcW = Math.max(mcW, tr.getWidth(mcTimes[i]));
             }
@@ -131,6 +133,17 @@ public final class TimerHud {
         if (millis < cfg.colorPurpleUnderMinutes * min) return COLOR_PURPLE;
         if (millis >= cfg.colorBlueFromMinutes * min) return COLOR_BLUE;
         return COLOR_YELLOW;
+    }
+
+    /** Tick (0-23999) -> "21:30". Le tick 0 = 6:00. */
+    private static String clock(long tick) {
+        long hours = (tick / 1000 + 6) % 24;
+        long minutes = (tick % 1000) * 60 / 1000;
+        return String.format("%02d:%02d", hours, minutes);
+    }
+
+    private static boolean isNight(long tick) {
+        return tick >= 12542 && tick < 23460;
     }
 
     /** 41:03 ou 1:05:09 */

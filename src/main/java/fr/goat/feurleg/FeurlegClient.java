@@ -46,12 +46,14 @@ public final class FeurlegClient implements ClientModInitializer {
             client.execute(() -> {
                 TimerStore.get().onJoin(key);
                 ZoneClock.onJoin(key);
+                ZonePeriods.onJoin(key);
             });
         });
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) ->
             client.execute(() -> {
                 TimerStore.get().onLeave();
                 ZoneClock.onLeave();
+                ZonePeriods.onLeave();
             }));
 
         ClientTickEvents.END_CLIENT_TICK.register(FeurlegClient::tick);
@@ -70,6 +72,7 @@ public final class FeurlegClient implements ClientModInitializer {
         }
         if (client.player == null) return;
         ZoneClock.tick(client);
+        ZonePeriods.tickSave();
 
         for (TimerStore.Timer t : TimerStore.get().list()) {
             long left = t.remainingMillis();

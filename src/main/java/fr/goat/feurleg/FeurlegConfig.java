@@ -38,6 +38,9 @@ public final class FeurlegConfig {
     public int colorPurpleUnderMinutes = 5;
     public int colorRedUnderMinutes = 2;
 
+    /** Moments de la journée affichés par /leg -> plages de ticks (tick 0 = 6:00). */
+    public java.util.Map<String, String> periods = ZonePeriods.defaultTable();
+
     /** Format des timers du serveur : "mm:ss" (minutes:secondes) ou "h:mm" (heures:minutes). */
     public String timerFormat = "mm:ss";
 
@@ -67,6 +70,8 @@ public final class FeurlegConfig {
             FeurlegClient.LOGGER.warn("config/feurleg.json illisible, réglages par défaut utilisés", e);
         }
         if (instance == null) instance = new FeurlegConfig();
+        if (instance.periods == null || instance.periods.isEmpty()) instance.periods = ZonePeriods.defaultTable();
+        ZonePeriods.loadTable(instance.periods);
         save();
     }
 

@@ -9,8 +9,13 @@ Mod Fabric **côté client** (Minecraft 1.21.1) qui affiche en permanence les ti
 - Alerte (son + message) à 1 min et à 0.
 
 ## Heure Minecraft du spawn
-Chaque zone a sa propre heure. Le mod l'apprend quand tu es **dans la zone et que tu ouvres /leg** (une fois par zone suffit),
-puis la fait avancer tout seul. Tant qu'une zone n'est pas connue, elle affiche `--:--`. Bleu = nuit, jaune clair = jour.
+Chaque zone a sa propre heure. Le mod l'apprend de deux façons :
+- **Survol dans /leg** : l'info-bulle d'une zone indique son moment (matin, midi, nuit, minuit...). Le mod garde les heures
+  compatibles et les affine à chaque survol, surtout quand le moment change. Affiche le moment du spawn (`nuit`)
+  ou une heure approximative (`~21:30`) quand il est assez sûr.
+- **Être dans la zone** et ouvrir /leg : heure exacte (`21:30`), vérifiée avec le moment affiché (jamais l'heure figée du spawn).
+
+`--:--` = zone jamais survolée. Bleu-gris = nuit, jaune clair = jour. Les plages de chaque moment sont dans `periods` de `config/feurleg.json`.
 
 ## Touches (modifiables dans Options > Commandes)
 - **K** : afficher / cacher le HUD

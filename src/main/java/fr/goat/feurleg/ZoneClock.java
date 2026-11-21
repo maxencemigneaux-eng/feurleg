@@ -32,7 +32,7 @@ public final class ZoneClock {
     }
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve("feurleg-zones.json");
+    private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve("feurleg-zones2.json");
     private static final Type FILE_TYPE = new TypeToken<LinkedHashMap<String, Data>>() {}.getType();
     private static final Set<String> GENERIC_DIMENSIONS = Set.of(
         "minecraft:overworld", "minecraft:the_nether", "minecraft:the_end");
@@ -77,10 +77,15 @@ public final class ZoneClock {
     }
 
     /** Appelé quand le menu /leg indique dans quelle zone se trouve le joueur (null = aucune zone connue, ex. Spawn). */
-    public static void onLegSeen(String zone) {
+    public static void onLegSeen(String zone, String word) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.world == null) return;
         lastWorld = client.world;
+        // Vérification : l'heure du monde où on est doit correspondre au moment affiché pour la zone.
+        // Sinon (ex. au spawn, heure figée), ce monde n'est pas vraiment la zone.
+        if (zone != null && (word == null || !ZonePeriods.wordMatchesTick(word, client.world.getTimeOfDay()))) {
+            zone = null;
+        }
         if (zone == null) {
             currentZone = null;
             hasAnchor = false;
