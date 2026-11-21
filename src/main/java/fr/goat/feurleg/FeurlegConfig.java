@@ -28,6 +28,11 @@ public final class FeurlegConfig {
     /** Opacité du fond (0 = transparent, 255 = opaque). */
     public int backgroundAlpha = 150;
 
+    /** Afficher l'heure Minecraft du spawn (ex. "21:30"). */
+    public boolean showMinecraftTime = true;
+    /** Afficher le compte à rebours (ex. "25:50"). */
+    public boolean showCountdown = true;
+
     /** Format des timers du serveur : "mm:ss" (minutes:secondes) ou "h:mm" (heures:minutes). */
     public String timerFormat = "mm:ss";
 

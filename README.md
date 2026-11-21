@@ -16,6 +16,7 @@ Mod Fabric **côté client** (Minecraft 1.21.1) qui affiche en permanence les ti
 - `corner` : `haut-gauche`, `haut-droite`, `bas-gauche`, `bas-droite`
 - `offsetX`, `offsetY`, `scale`, `backgroundAlpha`
 - `timerFormat` : `mm:ss` (défaut) ou `h:mm` si les timers du serveur sont en heures:minutes
+- `showMinecraftTime` : heure Minecraft du spawn (bleu = nuit), `showCountdown` : compte à rebours
 - `warnSeconds`, `alertSound`, `alertMessage`
 
 ## Compilation

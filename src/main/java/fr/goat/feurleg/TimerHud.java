@@ -20,6 +20,8 @@ public final class TimerHud {
     private static final int COLOR_SOON = 0xFFFF5555;
     private static final int COLOR_SPAWN = 0xFF55FF55;
     private static final int COLOR_STALE = 0xFF888888;
+    private static final int COLOR_MC_DAY = 0xFFFFE0A0;
+    private static final int COLOR_MC_NIGHT = 0xFF7FA8FF;
 
     private TimerHud() {}
 
@@ -38,7 +40,11 @@ public final class TimerHud {
         int n = timers.size();
         String[] times = new String[n];
         int[] colors = new int[n];
-        int nameW = 0, timeW = 0;
+        String[] mcTimes = new String[n];
+        int[] mcColors = new int[n];
+        int nameW = 0, timeW = 0, mcW = 0;
+        boolean showMc = cfg.showMinecraftTime && client.world != null;
+        boolean showCd = cfg.showCountdown || !showMc;
         boolean blink = (System.currentTimeMillis() / 500) % 2 == 0;
         for (int i = 0; i < n; i++) {
             TimerStore.Timer t = timers.get(i);
@@ -53,11 +59,27 @@ public final class TimerHud {
                 times[i] = format(left);
                 colors[i] = left <= cfg.warnSeconds * 1000L ? COLOR_SOON : COLOR_TIME;
             }
+            if (showMc) {
+                if (left > 0) {
+                    // 20 ticks par seconde ; le tick 0 d'une journée = 6:00 du matin.
+                    long tick = Math.floorMod(client.world.getTimeOfDay() + left / 50, 24000L);
+                    long hours = (tick / 1000 + 6) % 24;
+                    long minutes = (tick % 1000) * 60 / 1000;
+                    mcTimes[i] = String.format("%02d:%02d", hours, minutes);
+                    // Nuit Minecraft : environ de 19:00 (13000) à 5:00 (23000).
+                    mcColors[i] = (tick >= 13000 && tick < 23000) ? COLOR_MC_NIGHT : COLOR_MC_DAY;
+                } else {
+                    mcTimes[i] = "";
+                }
+                mcW = Math.max(mcW, tr.getWidth(mcTimes[i]));
+            }
+            if (!showCd && left > 0) times[i] = "";
             nameW = Math.max(nameW, tr.getWidth(t.name));
             timeW = Math.max(timeW, tr.getWidth(times[i]));
         }
+        int mcCol = showMc ? mcW + GAP : 0;
 
-        int innerW = n == 0 ? tr.getWidth(hint) : Math.max(tr.getWidth(title), nameW + GAP + timeW);
+        int innerW = n == 0 ? tr.getWidth(hint) : Math.max(tr.getWidth(title), nameW + GAP + mcCol + timeW);
         int w = innerW + PAD * 2;
         int h = PAD * 2 + LINE + (n == 0 ? LINE : n * LINE);
 
@@ -84,7 +106,13 @@ public final class TimerHud {
         }
         for (int i = 0; i < n; i++) {
             ctx.drawTextWithShadow(tr, timers.get(i).name, PAD, ly, COLOR_NAME);
-            ctx.drawTextWithShadow(tr, times[i], w - PAD - tr.getWidth(times[i]), ly, colors[i]);
+            if (showMc && !mcTimes[i].isEmpty()) {
+                int mx = showCd ? w - PAD - timeW - GAP - tr.getWidth(mcTimes[i]) : w - PAD - tr.getWidth(mcTimes[i]);
+                ctx.drawTextWithShadow(tr, mcTimes[i], mx, ly, mcColors[i]);
+            }
+            if (!times[i].isEmpty()) {
+                ctx.drawTextWithShadow(tr, times[i], w - PAD - tr.getWidth(times[i]), ly, colors[i]);
+            }
             ly += LINE;
         }
 
