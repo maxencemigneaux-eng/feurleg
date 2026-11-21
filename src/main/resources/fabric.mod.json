@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "feurleg",
+  "version": "${version}",
+  "name": "Feurleg",
+  "description": "Affiche en permanence les timers des légendaires (/leg) dans un coin de l'écran.",
+  "authors": ["Goat"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["fr.goat.feurleg.FeurlegClient"]
+  },
+  "mixins": [
+    { "config": "feurleg.mixins.json", "environment": "client" }
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "fabric-api": "*",
+    "minecraft": "~1.21.1",
+    "java": ">=21"
+  }
+}
