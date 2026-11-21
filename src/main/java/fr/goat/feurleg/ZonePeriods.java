@@ -174,7 +174,20 @@ public final class ZonePeriods {
         return new Prediction(null, w, false, night);
     }
 
+    /** Ordre préféré pour nommer une heure (ex. "soir" plutôt que "crépuscule"). */
+    private static final String[] DISPLAY_ORDER = {
+        "minuit", "midi", "aube", "soir", "matin", "apres-midi", "nuit", "crepuscule", "jour"};
+
+    /** Nom du moment de la journée pour un tick (0-23999), ex. "matin". */
+    public static String nameOfTick(long tick) {
+        return nameOf(Math.floorMod(tick, (long) DAY));
+    }
+
     private static String nameOf(long tick) {
+        for (String w : DISPLAY_ORDER) {
+            BitSet set = WORDS.get(w);
+            if (set != null && set.get((int) tick)) return DISPLAY.getOrDefault(w, w);
+        }
         for (Map.Entry<String, BitSet> e : WORDS.entrySet()) {
             if (e.getValue().get((int) tick)) return DISPLAY.getOrDefault(e.getKey(), e.getKey());
         }

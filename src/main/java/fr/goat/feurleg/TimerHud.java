@@ -65,10 +65,10 @@ public final class TimerHud {
                 if (left <= 0) {
                     mcTimes[i] = "";
                 } else if (exact != null) {
-                    mcTimes[i] = clock(exact);
+                    mcTimes[i] = clock(exact) + " " + ZonePeriods.nameOfTick(exact);
                     mcColors[i] = isNight(exact) ? COLOR_MC_NIGHT : COLOR_MC_DAY;
                 } else if (guess != null && guess.tick() != null) {
-                    mcTimes[i] = "~" + clock(guess.tick());
+                    mcTimes[i] = "~" + clock(guess.tick()) + " " + ZonePeriods.nameOfTick(guess.tick());
                     mcColors[i] = guess.night() ? COLOR_MC_NIGHT : COLOR_MC_DAY;
                 } else if (guess != null) {
                     mcTimes[i] = guess.word();
